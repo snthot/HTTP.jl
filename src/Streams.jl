@@ -338,6 +338,11 @@ end
 incomplete(http::Stream) =
     http.ntoread > 0 && (http.readchunked || http.ntoread != unknown_length)
 
+function Base.close(http::Stream{Response})
+    close(http.stream)
+    http.ntoread = 0
+end
+
 function IOExtras.closeread(http::Stream{Response})
 
     # Discard body bytes that were not read...
